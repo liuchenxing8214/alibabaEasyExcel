@@ -96,6 +96,24 @@ public class WebTest {
         return "success";
     }
 
+
+    /**
+     * @title
+     * @description   上传任意对象的excel
+     * @author lc
+     * @updateTime 2020/12/5 14:49
+     * @throws
+     */
+
+    @PostMapping("/randomUpload")
+    @ResponseBody
+    public void randomUpload(MultipartFile file) throws IOException {
+        // 这里 只要，然后读取第一个sheet 同步读取会自动finish
+        EasyExcel.read(file.getInputStream(), new NoModleDataListener()).sheet().doRead();
+    }
+
+
+
     private List<DownloadData> data() {
         List<DownloadData> list = new ArrayList<DownloadData>();
         for (int i = 0; i < 10; i++) {
@@ -107,4 +125,6 @@ public class WebTest {
         }
         return list;
     }
+
+
 }
