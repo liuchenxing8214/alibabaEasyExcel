@@ -3,6 +3,7 @@ package com.alibaba.easyexcel.test.demo.web;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.alibaba.excel.exception.ExcelDataConvertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,4 +83,24 @@ public class UploadDataListener extends AnalysisEventListener<UploadData> {
         uploadDAO.save(list);
         LOGGER.info("存储数据库成功！");
     }
+
+    /**
+     * 在转换异常 获取其他异常下会调用本接口。抛出异常则停止读取。如果这里不抛出异常则 继续读取下一行。
+     *
+     * @param exception
+     * @param context
+     * @throws Exception
+     */
+    @Override
+    public void onException(Exception exception, AnalysisContext context) {
+        LOGGER.error("解析失败，但是继续解析下一行:{}", exception.getMessage());
+        // 如果是某一个单元格的转换异常 能获取到具体行号
+        // 如果要获取头的信息 配合invokeHeadMap使用
+        if (exception instanceof ExcelDataConvertException) {
+            ExcelDataConvertException excelDataConvertException = (ExcelDataConvertException)exception;
+            LOGGER.error("第{}行，第{}列解析异常", excelDataConvertException.getRowIndex(),
+                excelDataConvertException.getColumnIndex());
+        }
+    }
+
 }
