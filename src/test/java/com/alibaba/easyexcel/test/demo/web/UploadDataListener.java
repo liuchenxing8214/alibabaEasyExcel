@@ -23,7 +23,7 @@ public class UploadDataListener extends AnalysisEventListener<UploadData> {
     /**
      * 每隔5条存储数据库，实际使用中可以3000条，然后清理list ，方便内存回收
      */
-    private static final int BATCH_COUNT = 5;
+    private static final int BATCH_COUNT = 4;
     List<UploadData> list = new ArrayList<UploadData>();
     /**
      * 假设这个是一个DAO，当然有业务逻辑这个也可以是一个service。当然如果不用存储这个对象没用。
@@ -70,6 +70,7 @@ public class UploadDataListener extends AnalysisEventListener<UploadData> {
      */
     @Override
     public void doAfterAllAnalysed(AnalysisContext context) {
+        LOGGER.info("doAfterAllAnalysed  开始=================");
         // 这里也要保存数据，确保最后遗留的数据也存储到数据库
         saveData();
         LOGGER.info("所有数据解析完成！");
